@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run startApp & npm run startServer",
+    "startApp": "ng serve",
+    "startServer": "nodemon",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -28,7 +30,8 @@
     "core-js": "^2.5.4",
     "express": "^4.16.4",
     "mongodb": "^3.1.13",
-    "rxjs": "^6.0.0",
+    "nodemon": "^1.18.10",
+    "rxjs": "6.0.0",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "zone.js": "^0.8.26"
@@ -55,6 +58,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.3.0",
     "ts-node": "~5.0.1",
+    "tsconfig-paths": "^3.8.0",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2"
   }

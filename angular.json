@@ -38,7 +38,7 @@
           "options": {
             "outputPath": "dist/jabber",
             "index": "src/index.html",
-            "main": "src/main.ts",
+            "main": "src/main-app.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
