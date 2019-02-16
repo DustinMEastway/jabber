@@ -1,6 +1,21 @@
 import { Router } from 'express';
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { Server } from 'socket.io';
 
-export const serverRouter = Router();
-export const apiRouter = Router();
+import { SocketEvents } from 'jabber/entities';
 
-serverRouter.use('/api', apiRouter);
+export function getServerRouter(io: Server): Router {
+	io.on('connection', socket => {
+		socket.on(SocketEvents.ChatMessage, message => {
+			io.emit(SocketEvents.ChatMessage, message);
+		});
+	});
+
+	const serverRouter = Router();
+	const apiRouter = Router();
+
+	serverRouter.use('/api', apiRouter);
+
+	return serverRouter;
+}

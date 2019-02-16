@@ -1,0 +1,51 @@
+:host {
+	display: block;
+	height: 100%;
+	position: relative;
+}
+
+$send-message-actions-height: 6em;
+
+.send-message-actions {
+	bottom: 0;
+	height: $send-message-actions-height;
+	left: 0;
+	padding: 0 1em 1em 1em;
+	position: absolute;
+	right: 0;
+
+	textarea {
+		resize: none;
+	}
+}
+
+.message-form-field /deep/ .mat-form-field-wrapper {
+	padding-bottom: 0;
+}
+
+.message-list {
+	bottom: $send-message-actions-height;
+	left: 0;
+	overflow-y: auto;
+	position: absolute;
+	right: 0;
+	width: 100%;
+}
+
+.message {
+	padding: .5em 1.5em;
+}
+
+$mat-toolbar-width: 64px;
+
+.message-list {
+	top: $mat-toolbar-width;
+}
+
+@media (max-width: 599px) {
+	$mat-toolbar-width: 54px;
+
+	.message-list {
+		top: $mat-toolbar-width;
+	}
+}
