@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import { interval } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Server } from 'socket.io';
 
 import { SocketEvents } from 'jabber/entities';
