@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@import '~@tstack/client/theming';
+
+@include mat-core();
+@include tsk-core();
+
+html, body {
+	height: 100%;
+}
+
+body {
+	margin: 0; font-family: 'Roboto', sans-serif;
+}
+
+@mixin set-themes($theme) {
+	@include angular-material-theme($theme);
+	@include tsk-themes($theme);
+}
+
+@include set-themes(mat-dark-theme(
+	mat-palette($mat-purple),
+	mat-palette($mat-green, A200, A100, A400)
+));

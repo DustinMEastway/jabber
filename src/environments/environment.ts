@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-	appDistDirectory: __dirname.replace('src/environments', 'dist/jabber'),
+	appDistDirectory: '../dist/jabber',
 	production: false,
 	serverPort: 3000
 };
