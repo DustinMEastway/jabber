@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">{{ roomId }}</mat-toolbar>
+<div class="message-list">
+	<pre *ngFor="let message of messages" class="message">{{ message }}</pre>
+</div>
+<div class="send-message-actions" fxLayout="row" fxLayoutGap="1em">
+	<mat-form-field appearance="outline" class="message-form-field" fxFlex>
+		<mat-label>Message:</mat-label>
+		<textarea #messageInput matInput placeholder="Message..."></textarea>
+	</mat-form-field>
+	<div fxLayoutAlign="end center">
+		<button mat-mini-fab (click)="onSendMessage()">
+			<mat-icon>send</mat-icon>
+		</button>
+	</div>
+</div>

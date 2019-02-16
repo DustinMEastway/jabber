@@ -1,11 +1,26 @@
 import { json } from 'body-parser';
 import * as express from 'express';
-import { environment } from './environments/environment';
-import { serverRouter } from 'jabber/server/server.router';
+import { createServer } from 'http';
+import * as socketIo from 'socket.io';
+
+import { environment } from 'jabber/environments/environment';
+import { getServerRouter } from 'jabber/server/server.router';
 
 const app = express();
 const serverPort = environment.serverPort ? environment.serverPort : 3000;
-const appDistDirectory = environment.appDistDirectory;
+const appDistDirectory = `${__dirname}/${environment.appDistDirectory}`;
+const server = createServer(app);
+const io = socketIo(server);
+
+// allow angular app to access the server
+if (!environment.production && environment.appUrl) {
+	app.use((request, response, next) => {
+		response.header('Access-Control-Allow-Origin', environment.appUrl);
+		response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+		next();
+	});
+}
 
 // parse the body of requests as json
 app.use(json());
@@ -14,13 +29,14 @@ app.use(json());
 app.use(express.static(appDistDirectory));
 
 // api routes
-app.use(serverRouter);
+app.use(getServerRouter(io));
 
 // redirect
 app.get('/*', (request, response) => {
 	response.sendFile(`${appDistDirectory}/index.html`);
 });
 
-app.listen(serverPort, () => {
-	console.log(`Jabber server is up and running on port ${serverPort}`);
+server.listen(serverPort, () => {
+	// tslint:disable-next-line:no-console
+	console.info(`Jabber server is up and running on port ${serverPort}`);
 });
