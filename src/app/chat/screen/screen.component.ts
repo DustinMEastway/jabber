@@ -32,7 +32,7 @@ export class ScreenComponent implements OnInit {
 			this._messages = [];
 		});
 
-		const temp = this._chatApiService.messages$.subscribe(message => {
+		this._chatApiService.messages$.subscribe(message => {
 			this._messages.push(message);
 		});
 	}
