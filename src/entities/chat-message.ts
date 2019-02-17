@@ -1,1 +1,4 @@
-export type ChatMessage = string;
+export interface ChatMessage {
+	content: string;
+	username: string;
+}

@@ -3,7 +3,9 @@ import { findIndex } from '@tstack/core';
 import { Observable, Subject, Subscriber } from 'rxjs';
 
 import { ChatMessage, SocketEvents } from 'jabber/entities';
+
 import { SocketIoService } from './socket-io.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
@@ -19,16 +21,23 @@ export class ChatApiService {
 		});
 	}
 
-	constructor(private _socketIoService: SocketIoService) {
+	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {
 		this._onMessage = this._onMessage.bind(this);
 	}
 
 	sendMessage(message: string): void {
-		this._socketIoService.emit(SocketEvents.ChatMessage, message);
+		const chatMessage: ChatMessage = {
+			content: message,
+			username: this._userService.user.username
+		};
+
+		this._socketIoService.emit(SocketEvents.ChatMessage, chatMessage);
 	}
 
-	private _onMessage(message: string): void {
-		this._messageSubscribers.forEach(subscriber => { subscriber.next(message); });
+	private _onMessage(message: ChatMessage): void {
+		this._messageSubscribers.forEach(subscriber => {
+			subscriber.next(message);
+		});
 	}
 
 	private _addMessageSubscriber(subscriber: Subscriber<ChatMessage>): void {
