@@ -1,6 +1,8 @@
 <mat-toolbar class="mat-elevation-z5 primary-nav" role="heading" color="primary">
 	<a mat-button class="title" routerLink="/">{{ title }}</a>
 	<div fxFlex></div>
+	<button *ngIf="isUserLoggedIn" mat-button (click)="onLogout()">Logout</button>
+	<button *ngIf="!isUserLoggedIn" mat-button routerLink="/login">Login</button>
 	<a mat-icon-button href="{{ githubUrl }}">
 		<mat-icon [attr.aria-label]="title + ' GitHub'" svgIcon="github"></mat-icon>
 	</a>
