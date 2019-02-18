@@ -10,13 +10,22 @@ import { environment } from 'jabber/environments/environment';
 })
 export class UserService {
 	private _user$ = new BehaviorSubject<User>(null);
+	private _lastUsername: string;
+
+	get lastUsername(): string {
+		return this._lastUsername;
+	}
+
+	get user(): User {
+		return this._user$.value;
+	}
 
 	get user$(): Observable<User> {
 		return this._user$.asObservable();
 	}
 
-	get user(): User {
-		return this._user$.value;
+	get username(): string {
+		return (this.user) ? this.user.username : '<anonymous>';
 	}
 
 	constructor() {
@@ -25,18 +34,23 @@ export class UserService {
 		).substr('username='.length);
 
 		if (usernameCookie.trim() !== '') {
-			this._user$.next({ username: usernameCookie });
+			this.setUser({ username: usernameCookie });
 		}
 	}
 
 	login(username: string): void {
 		this.setUsernameCookie(username);
-		this._user$.next({ username: username });
+		this.setUser({ username: username });
 	}
 
 	logout(): void {
 		this.setUsernameCookie('');
-		this._user$.next(null);
+		this.setUser(null);
+	}
+
+	private setUser(user: User): void {
+		this._lastUsername = this.username;
+		this._user$.next(user);
 	}
 
 	private setUsernameCookie(username: string): void {

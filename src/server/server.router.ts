@@ -1,13 +1,25 @@
 import { Router } from 'express';
 import { Server } from 'socket.io';
 
-import { ChatMessage, SocketEvents } from 'jabber/entities';
+import { SocketEvents } from 'jabber/entities';
+
+interface SocketIoEventSource<T = any> {
+	on(eventName: string, handler: (event: T) => void): void;
+}
+
+interface SocketIoEventTarget<T = any> {
+	emit(eventName: string, event: T): void;
+}
+
+function emitOnEvent<T = any>(source: SocketIoEventSource<T>, target: SocketIoEventTarget<T>, eventName: string): void {
+	source.on(eventName, event => { target.emit(eventName, event); });
+}
 
 export function getServerRouter(io: Server): Router {
-	io.on('connection', socket => {
-		socket.on(SocketEvents.ChatMessage, (message: ChatMessage) => {
-			io.emit(SocketEvents.ChatMessage, message);
-		});
+	io.on('connection', (socket: SocketIO.Socket) => {
+		emitOnEvent(socket, io, SocketEvents.ChatJoin);
+		emitOnEvent(socket, io, SocketEvents.ChatLeave);
+		emitOnEvent(socket, io, SocketEvents.ChatMessage);
 	});
 
 	const serverRouter = Router();

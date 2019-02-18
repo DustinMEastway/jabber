@@ -1,7 +1,7 @@
 <mat-toolbar color="primary">{{ roomId }}</mat-toolbar>
 <div class="message-list">
-	<div *ngFor="let message of messages" class="message">
-		{{ message.username }}
+	<div *ngFor="let message of messages$ | async" class="message">
+		<div *ngIf="message.username">{{ message.username }}</div>
 		<pre>{{ message.content }}</pre>
 	</div>
 </div>
