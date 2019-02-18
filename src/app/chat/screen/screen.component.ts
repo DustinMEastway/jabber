@@ -1,15 +1,15 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ChatApiService } from 'jabber/app/services';
 import { ChatMessage } from 'jabber/entities';
 
 @Component({
-  selector: 'app-screen',
-  templateUrl: './screen.component.html',
-  styleUrls: ['./screen.component.scss']
+	selector: 'app-screen',
+	templateUrl: './screen.component.html',
+	styleUrls: ['./screen.component.scss']
 })
 export class ScreenComponent implements OnInit {
 	@ViewChild('messageInput') messageInput: ElementRef<HTMLTextAreaElement>;

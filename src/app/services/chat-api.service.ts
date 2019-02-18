@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { findIndex } from '@tstack/core';
-import { Observable, Subject, Subscriber } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 
 import { ChatMessage, SocketEvents } from 'jabber/entities';
 

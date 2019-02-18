@@ -24,7 +24,7 @@
     "indent": [
       true,
       "tabs",
-      4
+      2
     ],
     "interface-over-type-literal": true,
     "label-position": true,
@@ -47,16 +47,17 @@
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
-      true,
-      "debug",
-      "info",
-      "log",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+       true,
+       "debug",
+       "info",
+       "log",
+       "time",
+       "timeEnd",
+       "trace"
+     ],
     "no-construct": true,
     "no-debugger": true,
+    "no-duplicate-imports": true,
     "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
@@ -84,6 +85,13 @@
       "check-else",
       "check-whitespace"
     ],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "lowercase-first",
+        "named-imports-order": "lowercase-first"
+      }
+    ],
     "prefer-const": true,
     "quotemark": [
       true,
@@ -97,6 +105,14 @@
     "triple-equals": [
       true,
       "allow-null-check"
+    ],
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "property-declaration",
+      "object-destructuring",
+      "array-destructuring"
     ],
     "typedef-whitespace": [
       true,

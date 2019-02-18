@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { connect } from 'socket.io-client';
+
 import { environment } from 'jabber/environments/environment';
-import { connect, Socket } from 'socket.io-client';
 
 @Injectable({ providedIn: 'root' })
 export class SocketIoService {
