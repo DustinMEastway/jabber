@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+	allowAnonymousUsers: true,
 	appDistDirectory: '../dist/jabber',
 	appDomain: 'localhost',
 	appPort: 4200,

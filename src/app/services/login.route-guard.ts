@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 
+import { environment } from 'jabber/environments/environment';
+
 import { UserService } from './user.service';
 
 @Injectable({
@@ -13,7 +15,7 @@ export class LoginRouteGuard implements CanActivate {
 	) {}
 
 	canActivate(): boolean {
-		if (this._userService.user == null) {
+		if (this._userService.user == null && !environment.allowAnonymousUsers) {
 			this._router.navigate([ 'login' ]);
 
 			return false;
