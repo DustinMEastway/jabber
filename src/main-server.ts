@@ -13,7 +13,7 @@ const server = createServer(app);
 const io = socketIo(server);
 
 // allow angular app to access the server
-const appUrl = `http://${environment.appDomain}` + ((environment.appPort) ? `:${environment.appPort}` : '');
+const appUrl = `http://${environment.appDomain}` + ((environment.appPort != null) ? `:${environment.appPort}` : '');
 if (!environment.production && appUrl) {
 	app.use((request, response, next) => {
 		response.header('Access-Control-Allow-Origin', appUrl);
