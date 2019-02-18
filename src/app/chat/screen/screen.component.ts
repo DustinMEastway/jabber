@@ -1,39 +1,40 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { merge, scan } from 'rxjs/operators';
 
 import { ChatApiService } from 'jabber/app/services';
 import { ChatMessage } from 'jabber/entities';
 
 @Component({
-  selector: 'app-screen',
-  templateUrl: './screen.component.html',
-  styleUrls: ['./screen.component.scss']
+	selector: 'app-screen',
+	templateUrl: './screen.component.html',
+	styleUrls: ['./screen.component.scss']
 })
 export class ScreenComponent implements OnInit {
 	@ViewChild('messageInput') messageInput: ElementRef<HTMLTextAreaElement>;
-	private _roomId$ = new BehaviorSubject<string>(null);
-	private _messages: ChatMessage[] = [];
+	private _roomId = '';
+	private _messages$: Observable<ChatMessage[]>;
 
-	get messages(): ChatMessage[] {
-		return this._messages;
+	get messages$(): Observable<ChatMessage[]> {
+		return this._messages$;
 	}
 
 	get roomId(): string {
-		return this._roomId$.value;
+		return this._roomId;
 	}
 
 	constructor(private _activatedRoute: ActivatedRoute, private _chatApiService: ChatApiService) {}
 
 	ngOnInit(): void {
-		this._activatedRoute.paramMap.pipe(map(paramMap => paramMap.get('roomId'))).subscribe(roomId => {
-			this._roomId$.next(roomId);
-			this._messages = [];
-		});
+		this._activatedRoute.paramMap.subscribe(paramMap => {
+			this._roomId = paramMap.get('roomId');
 
-		this._chatApiService.messages$.subscribe(message => {
-			this._messages.push(message);
+			this._messages$ = this._chatApiService.chatMessages$.pipe(
+				merge(this._chatApiService.joinChatMessages$),
+				merge(this._chatApiService.leaveChatMessages$),
+				scan<ChatMessage>((messages, chatMessage) => messages.concat(chatMessage), [])
+			);
 		});
 	}
 

@@ -1,6 +1,9 @@
 <mat-toolbar color="primary">{{ roomId }}</mat-toolbar>
 <div class="message-list">
-	<pre *ngFor="let message of messages" class="message">{{ message }}</pre>
+	<div *ngFor="let message of messages$ | async" class="message">
+		<div *ngIf="message.username">{{ message.username }}</div>
+		<pre>{{ message.content }}</pre>
+	</div>
 </div>
 <div class="send-message-actions" fxLayout="row" fxLayoutGap="1em">
 	<mat-form-field appearance="outline" class="message-form-field" fxFlex>

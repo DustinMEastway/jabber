@@ -1,53 +1,57 @@
 import { Injectable } from '@angular/core';
-import { findIndex } from '@tstack/core';
-import { Observable, Subject, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ChatMessage, SocketEvents } from 'jabber/entities';
+
 import { SocketIoService } from './socket-io.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatApiService {
-	private _messageSubscribers: Subscriber<ChatMessage>[] = [];
-
-	get messages$(): Observable<ChatMessage> {
-		return new Observable(subscriber => {
-			this._addMessageSubscriber(subscriber);
-
-			return () => {
-				this._removeMessageSubscriber(subscriber);
-			};
-		});
+	get joinChatMessages$(): Observable<ChatMessage> {
+		return this._socketIoService.observeEvent(SocketEvents.ChatJoin).pipe(
+			map<string, ChatMessage>(username => ({
+				content: `${username} joined the chat`,
+				username: null
+			}))
+		);
 	}
 
-	constructor(private _socketIoService: SocketIoService) {
-		this._onMessage = this._onMessage.bind(this);
+	get leaveChatMessages$(): Observable<ChatMessage> {
+		return this._socketIoService.observeEvent(SocketEvents.ChatLeave).pipe(
+			map<string, ChatMessage>(username => ({
+				content: `${username} left the chat`,
+				username: null
+			}))
+		);
 	}
+
+	get chatMessages$(): Observable<ChatMessage> {
+		this.joinChat();
+
+		return this._socketIoService.observeEvent(SocketEvents.ChatMessage, { cleanup: () => { this.leaveChat(); } });
+	}
+
+	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {}
 
 	sendMessage(message: string): void {
-		this._socketIoService.emit(SocketEvents.ChatMessage, message);
+		const chatMessage: ChatMessage = {
+			content: message,
+			username: this._userService.username
+		};
+
+		this._socketIoService.emit(SocketEvents.ChatMessage, chatMessage);
 	}
 
-	private _onMessage(message: string): void {
-		this._messageSubscribers.forEach(subscriber => { subscriber.next(message); });
+	private joinChat(): void {
+		this._socketIoService.emit(SocketEvents.ChatJoin, this._userService.username);
 	}
 
-	private _addMessageSubscriber(subscriber: Subscriber<ChatMessage>): void {
-		if (!this._messageSubscribers.length) {
-			this._socketIoService.socket.on(SocketEvents.ChatMessage, this._onMessage);
-		}
-
-		this._messageSubscribers.push(subscriber);
-	}
-
-	private _removeMessageSubscriber(subscriber: Subscriber<ChatMessage>): void {
-		const index = findIndex(this._messageSubscribers, subscriber);
-
-		if (index >= 0) {
-			this._messageSubscribers.splice(index, 1);
-		}
-
-		if (!this._messageSubscribers.length) {
-			this._socketIoService.socket.off(SocketEvents.ChatMessage, this._onMessage);
-		}
+	private leaveChat(): void {
+		this._socketIoService.emit(
+			SocketEvents.ChatLeave,
+			(this._userService.user) ? this._userService.username : this._userService.lastUsername
+		);
 	}
 }

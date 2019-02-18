@@ -7,15 +7,16 @@ import { environment } from 'jabber/environments/environment';
 import { getServerRouter } from 'jabber/server/server.router';
 
 const app = express();
-const serverPort = environment.serverPort ? environment.serverPort : 3000;
+const serverPort = (environment.serverPort != null) ? environment.serverPort : 3000;
 const appDistDirectory = `${__dirname}/${environment.appDistDirectory}`;
 const server = createServer(app);
 const io = socketIo(server);
 
 // allow angular app to access the server
-if (!environment.production && environment.appUrl) {
+const appUrl = `http://${environment.appDomain}` + ((environment.appPort != null) ? `:${environment.appPort}` : '');
+if (!environment.production && appUrl) {
 	app.use((request, response, next) => {
-		response.header('Access-Control-Allow-Origin', environment.appUrl);
+		response.header('Access-Control-Allow-Origin', appUrl);
 		response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
 		next();

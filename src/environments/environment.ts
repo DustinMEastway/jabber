@@ -4,7 +4,8 @@
 
 export const environment = {
 	appDistDirectory: '../dist/jabber',
-	appUrl: 'http://localhost:4200',
+	appDomain: 'localhost',
+	appPort: 4200,
 	production: false,
 	serverPort: 3000
 };
