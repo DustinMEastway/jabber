@@ -33,7 +33,9 @@ export class ChatApiService {
 		return this._socketIoService.observeEvent(SocketEvents.ChatMessage, { cleanup: () => { this.leaveChat(); } });
 	}
 
-	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {}
+	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {
+		this.leaveChat = this.leaveChat.bind(this);
+	}
 
 	sendMessage(message: string): void {
 		const chatMessage: ChatMessage = {
@@ -46,6 +48,7 @@ export class ChatApiService {
 
 	private joinChat(): void {
 		this._socketIoService.emit(SocketEvents.ChatJoin, this._userService.username);
+		window.addEventListener('unload', this.leaveChat);
 	}
 
 	private leaveChat(): void {
@@ -53,5 +56,6 @@ export class ChatApiService {
 			SocketEvents.ChatLeave,
 			(this._userService.user) ? this._userService.username : this._userService.lastUsername
 		);
+		window.removeEventListener('unload', this.leaveChat);
 	}
 }
