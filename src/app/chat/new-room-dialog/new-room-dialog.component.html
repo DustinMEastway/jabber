@@ -1,0 +1,11 @@
+<form class="new-room-form" fxLayoutGap="0.5em" fxLayoutAlign="start center" [formGroup]="form" (submit)="onSubmit()">
+	<mat-form-field fxFlex>
+		<input matInput formControlName="roomId" placeholder="Room Name:" type="text" />
+		<mat-error *ngIf="roomIdControl.errors?.required">Room name is required</mat-error>
+		<mat-error *ngIf="roomIdControl.errors?.invalidCharacters">Room name can only contain letters and numbers</mat-error>
+		<mat-error *ngIf="roomIdControl.errors?.maxlength">Room name must be 25 characters or less</mat-error>
+	</mat-form-field>
+	<button color="primary" mat-raised-button type="submit">
+		Create Room
+	</button>
+</form>

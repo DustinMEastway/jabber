@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { merge, scan } from 'rxjs/operators';
 
-import { ChatApiService } from 'jabber/app/services';
+import { ChatService } from 'jabber/app/services';
 import { ChatMessage } from 'jabber/entities';
 
 @Component({
@@ -24,13 +24,13 @@ export class ScreenComponent implements OnInit {
 		return this._roomId;
 	}
 
-	constructor(private _activatedRoute: ActivatedRoute, private _chatApiService: ChatApiService) {}
+	constructor(private _activatedRoute: ActivatedRoute, private _chatApiService: ChatService) {}
 
 	ngOnInit(): void {
 		this._activatedRoute.paramMap.subscribe(paramMap => {
 			this._roomId = paramMap.get('roomId');
 
-			this._messages$ = this._chatApiService.chatMessages$.pipe(
+			this._messages$ = this._chatApiService.getChatMessages$(this.roomId).pipe(
 				merge(this._chatApiService.joinChatMessages$),
 				merge(this._chatApiService.leaveChatMessages$),
 				scan<ChatMessage>((messages, chatMessage) => messages.concat(chatMessage), [])
@@ -40,7 +40,7 @@ export class ScreenComponent implements OnInit {
 
 	onSendMessage(): void {
 		const messageInput = this.messageInput.nativeElement;
-		this._chatApiService.sendMessage(messageInput.value);
+		this._chatApiService.sendMessage(this.roomId, messageInput.value);
 		messageInput.value = '';
 		messageInput.focus();
 	}

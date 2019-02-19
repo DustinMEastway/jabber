@@ -15,6 +15,14 @@ body {
 @mixin set-themes($theme) {
 	@include angular-material-theme($theme);
 	@include tsk-themes($theme);
+	$background-palette: map-get($theme, background);
+	$dialog-background: mat-color($background-palette, dialog);
+	$foreground-text-color: map-get(map-get($theme, foreground), text);
+
+	.tsk-dialog-background {
+		background-color: $dialog-background;
+		color: $foreground-text-color;
+	}
 }
 
 @include set-themes(mat-dark-theme(

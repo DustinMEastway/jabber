@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Type } from '@tstack/core';
 
 import { UserService } from 'jabber/app/services';
 
@@ -11,6 +12,7 @@ import { UserService } from 'jabber/app/services';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+	leftSidenavComponentType: Type<any>;
 	private _githubLink = 'https://github.com/DustinMEastway/jabber';
 	private _title = 'Jabber';
 

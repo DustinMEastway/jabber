@@ -18,8 +18,8 @@ export class SocketIoService {
 		return this._socket;
 	}
 
-	emit(event: string, value: any): void {
-		this._socket.emit(event, value);
+	emit(event: string, ...args: any[]): void {
+		this._socket.emit(event, ...args);
 	}
 
 	observeEvent<T = any>(eventName: string, config?: { cleanup?: () => void; }): Observable<T> {
