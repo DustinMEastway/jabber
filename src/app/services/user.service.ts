@@ -5,12 +5,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from 'jabber/entities';
 import { environment } from 'jabber/environments/environment';
 
+const anonymousUsername = '<anonymous>';
+
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
 	private _user$ = new BehaviorSubject<User>(null);
-	private _lastUsername: string;
+	private _lastUsername = anonymousUsername;
 
 	get lastUsername(): string {
 		return this._lastUsername;
@@ -25,7 +27,7 @@ export class UserService {
 	}
 
 	get username(): string {
-		return (this.user) ? this.user.username : '<anonymous>';
+		return (this.user) ? this.user.username : anonymousUsername;
 	}
 
 	constructor() {
