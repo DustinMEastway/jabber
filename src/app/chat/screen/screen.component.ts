@@ -24,16 +24,16 @@ export class ScreenComponent implements OnInit {
 		return this._roomId;
 	}
 
-	constructor(private _activatedRoute: ActivatedRoute, private _chatApiService: ChatService) {}
+	constructor(private _activatedRoute: ActivatedRoute, private _chatService: ChatService) {}
 
 	ngOnInit(): void {
 		this._activatedRoute.paramMap.subscribe(paramMap => {
 			this._roomId = paramMap.get('roomId');
 
 			this._messages$ = merge(
-				this._chatApiService.getChatMessages$(this.roomId),
-				this._chatApiService.joinChatMessages$,
-				this._chatApiService.leaveChatMessages$
+				this._chatService.getChatMessages$(this.roomId),
+				this._chatService.joinChatMessages$,
+				this._chatService.leaveChatMessages$
 			).pipe(
 				scan<ChatMessage>((messages, chatMessage) => messages.concat(chatMessage), [])
 			);
@@ -42,7 +42,7 @@ export class ScreenComponent implements OnInit {
 
 	onSendMessage(): void {
 		const messageInput = this.messageInput.nativeElement;
-		this._chatApiService.sendMessage(this.roomId, messageInput.value);
+		this._chatService.sendMessage(this.roomId, messageInput.value);
 		messageInput.value = '';
 		messageInput.focus();
 	}
