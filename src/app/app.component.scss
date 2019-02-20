@@ -19,34 +19,17 @@
 $mat-toolbar-width: 64px;
 
 .app-container {
-	top: 0;
-	left: 0;
-	right: 0;
 	bottom: 0;
+	left: 0;
 	position: absolute;
-
-	.mat-sidenav {
-		top: $mat-toolbar-width;
-		position: fixed;
-	}
-
-	.mat-sidenav-content {
-		top: $mat-toolbar-width;
-		max-height: calc(100% - #{$mat-toolbar-width});
-	}
+	right: 0;
+	top: $mat-toolbar-width;
 }
 
 @media (max-width: 599px) {
 	$mat-toolbar-width: 54px;
 
 	.app-container {
-		.mat-sidenav {
-			top: $mat-toolbar-width;
-		}
-
-		.mat-sidenav-content {
-			top: $mat-toolbar-width;
-			max-height: calc(100% - #{$mat-toolbar-width});
-		}
+		top: $mat-toolbar-width;
 	}
 }

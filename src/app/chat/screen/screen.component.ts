@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { merge, scan } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
-import { ChatApiService } from 'jabber/app/services';
+import { ChatService } from 'jabber/app/services';
 import { ChatMessage } from 'jabber/entities';
 
 @Component({
@@ -24,15 +24,17 @@ export class ScreenComponent implements OnInit {
 		return this._roomId;
 	}
 
-	constructor(private _activatedRoute: ActivatedRoute, private _chatApiService: ChatApiService) {}
+	constructor(private _activatedRoute: ActivatedRoute, private _chatService: ChatService) {}
 
 	ngOnInit(): void {
 		this._activatedRoute.paramMap.subscribe(paramMap => {
 			this._roomId = paramMap.get('roomId');
 
-			this._messages$ = this._chatApiService.chatMessages$.pipe(
-				merge(this._chatApiService.joinChatMessages$),
-				merge(this._chatApiService.leaveChatMessages$),
+			this._messages$ = merge(
+				this._chatService.getChatMessages$(this.roomId),
+				this._chatService.joinChatMessages$,
+				this._chatService.leaveChatMessages$
+			).pipe(
 				scan<ChatMessage>((messages, chatMessage) => messages.concat(chatMessage), [])
 			);
 		});
@@ -40,7 +42,7 @@ export class ScreenComponent implements OnInit {
 
 	onSendMessage(): void {
 		const messageInput = this.messageInput.nativeElement;
-		this._chatApiService.sendMessage(messageInput.value);
+		this._chatService.sendMessage(this.roomId, messageInput.value);
 		messageInput.value = '';
 		messageInput.focus();
 	}

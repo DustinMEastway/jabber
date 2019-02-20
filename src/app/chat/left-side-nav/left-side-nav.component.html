@@ -1,0 +1,16 @@
+<div fxLayout="column">
+	<div class="rooms-title" fxLayoutAlign="begin center">
+		<span fxFlex>Rooms</span>
+		<button color="primary" mat-mini-fab (click)="onNewRoom()">
+			<mat-icon>add</mat-icon>
+		</button>
+	</div>
+	<a
+		*ngFor="let roomId of roomIds$ | async"
+		class="chat-room-link"
+		mat-button
+		routerLink="/chat/room/{{ roomId }}"
+		routerLinkActive="active-route">
+		{{ roomId }}
+	</a>
+</div>

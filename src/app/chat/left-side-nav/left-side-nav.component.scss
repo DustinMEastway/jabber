@@ -1,0 +1,12 @@
+.rooms-title {
+	padding: 0.5em;
+}
+
+.chat-room-link {
+	border-width: 1px;
+	border-style: solid;
+
+	&:not(.active-route) {
+		border-color: transparent;
+	}
+}

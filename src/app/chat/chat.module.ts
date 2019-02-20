@@ -8,6 +8,10 @@ import { ChatScreenComponent } from './chat-screen.component';
 import { ScreenComponent } from './screen/screen.component';
 
 @NgModule({
+	declarations: [
+		ChatScreenComponent,
+		ScreenComponent
+	],
 	imports: [
 		CommonModule,
 		FlexLayoutModule,
@@ -17,10 +21,6 @@ import { ScreenComponent } from './screen/screen.component';
 		MatInputModule,
 		MatToolbarModule,
 		ChatRoutingModule
-	],
-	declarations: [
-		ChatScreenComponent,
-		ScreenComponent
 	]
 })
 export class ChatModule { }
