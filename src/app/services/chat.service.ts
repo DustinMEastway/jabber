@@ -36,9 +36,7 @@ export class ChatService {
 		return this._socketIoService.observeEvent(SocketEvents.ChatRooms);
 	}
 
-	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {
-		this.leaveChat = this.leaveChat.bind(this);
-	}
+	constructor(private _socketIoService: SocketIoService, private _userService: UserService) {}
 
 	getChatMessages$(roomId: string): Observable<ChatMessage> {
 		this.joinChat(roomId);
@@ -70,7 +68,7 @@ export class ChatService {
 			this._socketIoService.emit(SocketEvents.ChatLeave, this._userService.lastUsername);
 			this._socketIoService.emit(SocketEvents.ChatJoin, this._userService.username);
 		});
-		window.addEventListener('unload', this.leaveChat.bind(this, roomId));
+		window.onbeforeunload = () => this.leaveChat(roomId);
 	}
 
 	private leaveChat(roomId?: string): void {
@@ -81,6 +79,5 @@ export class ChatService {
 
 		this._socketIoService.emit(SocketEvents.ChatLeave, event);
 		this._userSubscription.unsubscribe();
-		window.removeEventListener('unload', this.leaveChat.bind(this, roomId));
 	}
 }
