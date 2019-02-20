@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { merge, scan } from 'rxjs/operators';
+import { merge, Observable } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
 import { ChatService } from 'jabber/app/services';
 import { ChatMessage } from 'jabber/entities';
@@ -30,9 +30,11 @@ export class ScreenComponent implements OnInit {
 		this._activatedRoute.paramMap.subscribe(paramMap => {
 			this._roomId = paramMap.get('roomId');
 
-			this._messages$ = this._chatApiService.getChatMessages$(this.roomId).pipe(
-				merge(this._chatApiService.joinChatMessages$),
-				merge(this._chatApiService.leaveChatMessages$),
+			this._messages$ = merge(
+				this._chatApiService.getChatMessages$(this.roomId),
+				this._chatApiService.joinChatMessages$,
+				this._chatApiService.leaveChatMessages$
+			).pipe(
 				scan<ChatMessage>((messages, chatMessage) => messages.concat(chatMessage), [])
 			);
 		});
