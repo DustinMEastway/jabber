@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Type } from '@tstack/core';
 
 import { UserService } from 'jabber/app/services';
+import { environment } from 'jabber/environments/environment';
 
 @Component({
 	selector: 'app-root',
@@ -42,6 +43,8 @@ export class AppComponent implements OnInit {
 
 	onLogout(): void {
 		this._userService.logout();
-		this._router.navigate([ '/login' ]);
+		if (!environment.allowAnonymousUsers) {
+			this._router.navigate([ '/login' ]);
+		}
 	}
 }

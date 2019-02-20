@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { markAs } from '@tstack/client';
 
 import { UserService } from 'jabber/app/services';
+import { environment } from 'jabber/environments/environment';
 
 @Component({
 	selector: 'app-login-screen',
@@ -13,8 +14,16 @@ import { UserService } from 'jabber/app/services';
 export class LoginScreenComponent implements OnInit {
 	private _form: FormGroup;
 
+	get displayAnonymousHint(): boolean {
+		return environment.allowAnonymousUsers;
+	}
+
 	get form(): FormGroup {
 		return this._form;
+	}
+
+	get usernameControl(): AbstractControl {
+		return this.form.get('username');
 	}
 
 	constructor(
@@ -30,8 +39,16 @@ export class LoginScreenComponent implements OnInit {
 			}
 		});
 
+		const usernameValidators: ValidatorFn[] = [
+			(control: AbstractControl) => /^[\w\d]*$/.test(control.value) ? null : { invalidCharacters: true }
+		];
+
+		if (!environment.allowAnonymousUsers) {
+			usernameValidators.push(Validators.required);
+		}
+
 		this._form = this._formBuilder.group({
-			username: [ '',  Validators.required ]
+			username: [ '', usernameValidators]
 		});
 	}
 
@@ -43,7 +60,13 @@ export class LoginScreenComponent implements OnInit {
 		if (this.form.invalid) {
 			markAs(this.form, 'touched');
 		} else {
-			this._userService.login(this.form.get('username').value);
+			const username = this.form.get('username').value.trim();
+
+			if (username !== '') {
+				this._userService.login(username);
+			}
+
+			this._router.navigate([ '/' ]);
 		}
 	}
 }
